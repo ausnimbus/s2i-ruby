@@ -1,0 +1,11 @@
+sudo: required
+services:
+- docker
+env:
+  global:
+  - VERSIONS="2.1,2.2,2.3,2.4"
+script:
+- ". test/run"
+notifications:
+  slack:
+    secure: anIO0ln0DP/5qhD5u+v1fXiskDu7tOMty5BcMFmuaWlqBDeyVR8FVUhH5PoYSWZ3rWhGj8G7ynrwmu95Ko2PdzUUl2/3OlBKIpvs4KJMlgG5g6EP2HjNj4Qh3H5KVsan9zA3OjkDITJ7fe3ICRt6mUyBG8gwTkm93ri5VxQ2+VxKxwmfZgXGTTRCBwL9LM+Ulhm6ln0QpjL6g9yd1tO1+OOTD/h6RCQRGssCctl8JamU8iL6Lfp2SpS+E/FE0cMGI7eE9u0wC3BQxWeDz7FLsglw4e8uxVNA8Kc/iKRsNMWDM1RlEHBvnCjJ3QkgqRwM42w9oOouCNgMU7/gH7j4YR2KrJ9zGe8O4dn7ooklsVNDqdIpvQUWcftKxzBib5AnbGwHSgtFqvE1olHydXzahl0Nq6F+RnCn6pJeegeLrQ7sQDgS1hiNHOM7KkSY/vzjnUOchpstSpe+n0zOdiwZFFyhzTG3L2B1q4R0sgnxwOoQE5VthmeSk8tsxNxmxOSohParpAO9f7UVY45uWp5/E8tGkz5dOvsXCZIu3fLDsCEjYhInK6kPF72SLxFrLj/rGfeJzKrc1ow5LkL5kJ3c6lFm+nFFOYnnz+eFVvL+jz7zJKm5Gan3p0tX3sX26Xvt96JPqzBoRvplB1KCOVYLfOjxaQ664RH+3AMg/wvVs1w=
