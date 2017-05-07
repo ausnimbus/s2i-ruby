@@ -1,0 +1,25 @@
+#!/bin/bash -e
+source /opt/app-root/etc/ruby_environment
+
+check_number PUMA_WORKERS     "${PUMA_WORKERS:-0}"
+check_number PUMA_MIN_THREADS "${PUMA_MIN_THREADS:-0}"
+check_number PUMA_MAX_THREADS "${PUMA_MAX_THREADS:-0}"
+
+if is_puma_installed; then
+  source cgroup-limits
+
+  exec bundle exec "puma --config ../etc/puma.cfg"
+else
+  echo "You might consider adding 'puma' into your Gemfile."
+
+  if bundle exec rackup -h &>/dev/null; then
+    if [ -f Gemfile ]; then
+      exec bundle exec "rackup -E ${RAILS_ENV:-$RACK_ENV} -P /tmp/rack.pid --host 0.0.0.0 --port 8080"
+    else
+      exec rackup -E "${RAILS_ENV:-$RACK_ENV}" -P /tmp/rack.pid --host 0.0.0.0 --port 8080
+    fi
+  else
+    echo "ERROR: Rubygem Rack is not installed in the present image."
+    echo "       Add rack to your Gemfile in order to start the web server."
+  fi
+fi

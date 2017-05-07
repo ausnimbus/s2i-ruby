@@ -1,0 +1,20 @@
+#!/bin/bash
+
+function rake_assets_precompile() {
+  [[ "$DISABLE_ASSET_COMPILATION" == "true" ]] && return
+  [ ! -f Gemfile ] && return
+  [ ! -f Rakefile ] && return
+  ! grep " rails " Gemfile.lock >/dev/null && return
+  ! grep " execjs " Gemfile.lock >/dev/null && return
+  ! bundle exec 'rake -T' | grep "assets:precompile" >/dev/null && return
+
+  echo "---> Starting asset compilation ..."
+  bundle exec rake assets:precompile
+}
+
+export RACK_ENV=${RACK_ENV:-"production"}
+
+function is_puma_installed() {
+  [ ! -f Gemfile.lock ] && return 1
+  grep ' puma ' Gemfile.lock >/dev/null
+}
