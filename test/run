@@ -1,7 +1,6 @@
 #!/bin/bash
 #
-# The 'run' performs a simple test that verifies that STI image.
-# The main focus here is to excersise the STI scripts.
+# The 'run' performs a simple test that verifies that image
 #
 # IMAGE_NAME specifies a name of the candidate image used for testing.
 # The image has to be available before this script is executed.
@@ -13,7 +12,10 @@ S2I_ARGS=${S2I_ARGS:-""}
 
 TEST_APPS=({rack,puma})
 VERSION_COMMAND="ruby --version"
-EXTRA_TESTS=""
+
+extra_tests() {
+  echo "Nothing yet.."
+}
 
 test_dir="$(readlink -zf $(dirname "${BASH_SOURCE[0]}"))"
-source ${test_dir}/../common/tests/functions
+source ${test_dir}/../common/tests/s2i
