@@ -1,9 +1,9 @@
 #!/bin/bash -e
 source /opt/app-root/etc/ruby_environment
 
-check_number PUMA_WORKERS     "${PUMA_WORKERS:-0}"
-check_number PUMA_MIN_THREADS "${PUMA_MIN_THREADS:-0}"
-check_number PUMA_MAX_THREADS "${PUMA_MAX_THREADS:-0}"
+check-number PUMA_WORKERS     "${PUMA_WORKERS:-0}"
+check-number PUMA_MIN_THREADS "${PUMA_MIN_THREADS:-0}"
+check-number PUMA_MAX_THREADS "${PUMA_MAX_THREADS:-0}"
 
 if is_puma_installed; then
   source cgroup-limits
