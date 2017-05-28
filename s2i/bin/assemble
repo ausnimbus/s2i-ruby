@@ -51,5 +51,7 @@ fix-permissions ./
 # it to store temporary data (uploads/cache/sessions/etcd).
 # The ./db folder has to be writeable as well because when Rails complete the
 # migration it writes the schema version into ./db/schema.db
-fix-permissions ./tmp
-fix-permissions ./db
+set +e
+[[ -d ./tmp ]] && chgrp -R 0 ./tmp && chmod -R g+rw ./tmp
+[[ -d ./db ]] && chgrp -R 0 ./db && chmod -R g+rw ./db
+set -e
