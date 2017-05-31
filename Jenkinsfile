@@ -66,6 +66,11 @@ node {
                                                 ]
                                         ],
                                         "runPolicy" : "Serial",
+                                        "resources" : [
+                                            "limits" : [
+                                                "memory" : "2Gi"
+                                            ]
+                                        ],
                                         "source" : [
                                                 "git" : [
                                                         "uri" : "https://github.com/ausnimbus/s2i-ruby"
@@ -141,6 +146,16 @@ node {
         sleep 60
         echo "Testing endpoint ${testAppHost}:${testAppPort}"
         sh "curl -o /dev/null $testAppHost:$testAppPort"
+}
+
+                        }
+                        stage("Stage (Ruby ${versions[i]})") {
+                                openshift.withCluster() {
+        echo "==============================="
+        echo "Tag new image into staging"
+        echo "==============================="
+
+        openshift.tag("ausnimbus-ci/s2i-ruby:${versions[i]}", "ausnimbus/s2i-ruby:${versions[i]}")
 }
 
                         }
