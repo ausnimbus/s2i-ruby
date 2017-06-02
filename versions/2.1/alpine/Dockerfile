@@ -56,14 +56,50 @@ CMD /usr/bin/base-usage
 # </s2i>
 # <template>
 
+# Install dependencies for Ruby
+# Also installs dependencies for the following common gems:
+#
+# gems             dependencies
+# ------------------------------------------------------------------
+# curb             libcurl, gnutls-dev, openssl-dev
+# pg               postgresql-dev
+# rmagick          imagemagick, imagemagick-dev
+# nokogiri         libxml2-dev, libxslt-dev
+# sqlite3          libsqlite3-dev
+# mysql2           mariadb-dev
+# paperclip        file
+# charlock_holmes  icu-dev
+# rugged           libgit2-dev
+
 RUN apk add --no-cache \
-      build-base \
-      libxml2-dev \
-      libxslt-dev \
-      postgresql-dev \
-      mariadb-dev && \
-    rm -rf /tmp/* && \
-    rm -rf /var/cache/apk/*
+        autoconf \
+        build-base \
+        ca-certificates \
+        cmake \
+        curl \
+        git \
+        file \
+        imagemagick \
+        libcurl \
+        gnutls-dev \
+        openssl-dev \
+        libffi-dev \
+        gdbm-dev \
+        libgit2-dev \
+        gmp-dev \
+        icu-dev \
+        imagemagick-dev \
+        mariadb-dev \
+        ncurses-dev \
+        postgresql-dev \
+        readline-dev \
+        sqlite-dev \
+        openssl-dev \
+        libxml2-dev \
+        libxslt-dev \
+        yaml-dev \
+        zlib-dev && \
+    rm -rf /var/lib/apt/lists/*
 
 # </template>
 # <post>

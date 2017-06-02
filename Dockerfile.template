@@ -1,8 +1,47 @@
-RUN apt-get update && apt-get install -y --no-install-recommends \
-      build-essential \
-      libxml2-dev \
-      libpq5 \
-      libpq-dev \      
-      libmysqlclient18 \
-      libmysqlclient-dev && \
+# Install dependencies for Ruby
+# Also installs dependencies for the following common gems:
+#
+# gems             dependencies
+# ------------------------------------------------------------------
+# curb             libcurl3, libcurl3-gnutls, libcurl4-openssl-dev
+# pg               libpq-dev
+# rmagick          imagemagick, libmagickwand-dev
+# nokogiri         libxml2-dev, libxslt-dev
+# sqlite3          libsqlite3-dev
+# mysql2           libmysqlclient-dev
+# paperclip        file
+# charlock_holmes  libicu-dev
+# rugged           libgit2-dev
+
+RUN apt-get update -y && \
+    apt-get install -y -q --no-install-recommends \
+        apt-utils \
+        autoconf \
+        build-essential \
+        ca-certificates \
+        cmake \
+        curl \
+        git \
+        file \
+        imagemagick \
+        libcurl3 \
+        libcurl3-gnutls \
+        libcurl4-openssl-dev \
+        libffi-dev \
+        libgdbm-dev \
+        libgit2-dev \
+        libgmp-dev \
+        libicu-dev \
+        libmagickwand-dev \
+        libmysqlclient-dev \
+        libncurses5-dev \
+        libpq-dev \
+        libqdbm-dev \
+        libreadline6-dev \
+        libsqlite3-dev \
+        libssl-dev \
+        libxml2-dev \
+        libxslt-dev \
+        libyaml-dev \
+        libz-dev && \
     rm -rf /var/lib/apt/lists/*
