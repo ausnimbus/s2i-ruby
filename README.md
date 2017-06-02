@@ -111,11 +111,9 @@ The versions currently supported are:
 - 2.3
 - 2.4
 
-## Hacking
+## Variants
 
-`hack/run build` will build and test all images
-`hack/run update` will update all Dockerfiles
+Two different variants are made available:
 
-`docker-squash` is used to to squash the final image:
-
-`pip install docker-squash`
+- Default
+- Alpine

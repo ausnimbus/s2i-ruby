@@ -1,8 +1,8 @@
-RUN apk add --no-cache \
-      build-base \
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      build-essential \
       libxml2-dev \
-      libxslt-dev \
-      postgresql-dev \
-      mariadb-dev && \
-    rm -rf /tmp/* && \
-    rm -rf /var/cache/apk/*
+      libpq5 \
+      libpq-dev \      
+      libmysqlclient18 \
+      libmysqlclient-dev && \
+    rm -rf /var/lib/apt/lists/*
