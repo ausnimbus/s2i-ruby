@@ -1,8 +1,8 @@
 #!/bin/bash
 source cgroup-limits
 
+set -e
 set -o pipefail
-set -eu
 # Include hidden files
 shopt -s dotglob
 
@@ -22,9 +22,9 @@ function rake_assets_precompile() {
   bundle exec rake assets:precompile
 }
 
-export RACK_ENV=${RACK_ENV:-"production"}
-
 function is_puma_installed() {
   [ ! -f Gemfile.lock ] && return 1
   grep ' puma ' Gemfile.lock >/dev/null
 }
+
+export RACK_ENV=${RACK_ENV:-"production"}
