@@ -1,4 +1,14 @@
 #!/bin/bash
+source cgroup-limits
+
+set -o pipefail
+set -eu
+# Include hidden files
+shopt -s dotglob
+
+# Set the umask to be '002' so that any files/directories created from
+# this point are group writable.
+umask 002
 
 function rake_assets_precompile() {
   [[ "$DISABLE_ASSET_COMPILATION" == "true" ]] && return
