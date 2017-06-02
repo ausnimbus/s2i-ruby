@@ -3,8 +3,8 @@
 NAME="ruby"
 DISPLAY_NAME="Ruby"
 TYPE="s2i"
-VARIANTS="default,alpine"
-VERSIONS="2.1,2.2,2.3,2.4"
+VARIANTS=${VARIANTS:-"default,alpine"}
+VERSIONS=${VERSIONS:-"2.1,2.2,2.3,2.4"}
 
 DOCKER_PUSH=${DOCKER_PUSH:-"false"}
 
