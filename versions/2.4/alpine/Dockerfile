@@ -3,26 +3,26 @@
 #
 # DO NOT EDIT IT DIRECTLY.
 #
-FROM ruby:2.3
+FROM ruby:2.4-alpine
 # <pre>
 
 MAINTAINER AusNimbus <support@ausnimbus.com.au>
 
-LABEL summary="Platform for running Ruby 2.3 applications" \
+LABEL summary="Platform for running Ruby 2.4 applications" \
       maintainer="AusNimbus <support@ausnimbus.com.au>" \
-      io.k8s.description="Platform for running Ruby 2.3 applications" \
-      io.k8s.display-name="Ruby 2.3"
+      io.k8s.description="Platform for running Ruby 2.4 applications" \
+      io.k8s.display-name="Ruby 2.4"
 
-ENV USER=999 \
+ENV USER=100 \
     HOME=/opt/app-root/src
 
 USER 0
 
-RUN apt-get update && apt-get install -y \
-      rsync nano vim && \
-    mkdir -p $HOME && \
-    useradd -u 1001 -g 0 -d ${HOME} -s /sbin/nologin \
-      -c "Default Application User" default && \
+RUN apk --no-cache add bash rsync && \
+    mkdir -p ${HOME}/.pki/nssdb && \
+    chown -R 1001:0 ${HOME}/.pki && \
+    adduser -S -u 1001 -G root -h ${HOME} -s /sbin/nologin \
+      -g "Default Application User" default && \
     chown -R 1001:0 /opt/app-root
 
 # Copy common executable utilities.
@@ -35,7 +35,7 @@ COPY ./contrib/ /opt/app-root
 # </pre>
 # <s2i>
 
-RUN apt-get install -y git
+RUN apk --no-cache add git && rm -rf /var/cache/apk/*
 
 ENV STI_SCRIPTS_PATH=/usr/libexec/s2i
 
@@ -61,54 +61,53 @@ CMD /usr/bin/base-usage
 #
 # gems             dependencies
 # ------------------------------------------------------------------
-# curb             libcurl3, libcurl3-gnutls, libcurl4-openssl-dev
-# pg               libpq-dev
-# rmagick          imagemagick, libmagickwand-dev
+# curb             libcurl, gnutls-dev, openssl-dev
+# pg               postgresql-dev
+# rmagick          imagemagick, imagemagick-dev
 # nokogiri         libxml2-dev, libxslt-dev
 # sqlite3          libsqlite3-dev
-# mysql2           libmysqlclient-dev
+# mysql2           mariadb-dev
 # paperclip        file
-# charlock_holmes  libicu-dev
+# charlock_holmes  icu-dev
 # rugged           libgit2-dev
 
-RUN apt-get update -y && \
-    apt-get install -y -q --no-install-recommends \
-        apt-utils \
+RUN apk add --no-cache \
         autoconf \
-        build-essential \
+        build-base \
         ca-certificates \
         cmake \
         curl \
         git \
         file \
         imagemagick \
-        libcurl3 \
-        libcurl3-gnutls \
-        libcurl4-openssl-dev \
+        libcurl \
+        gnutls-dev \
+        openssl-dev \
         libffi-dev \
-        libgdbm-dev \
+        gdbm-dev \
         libgit2-dev \
-        libgmp-dev \
-        libicu-dev \
-        libmagickwand-dev \
-        libmysqlclient-dev \
-        libncurses5-dev \
-        libpq-dev \
-        libqdbm-dev \
-        libreadline6-dev \
-        libsqlite3-dev \
-        libssl-dev \
+        gmp-dev \
+        icu-dev \
+        imagemagick-dev \
+        mariadb-dev \
+        ncurses-dev \
+        postgresql-dev \
+        readline-dev \
+        sqlite-dev \
+        openssl-dev \
         libxml2-dev \
         libxslt-dev \
-        libyaml-dev \
-        libz-dev && \
+        yaml-dev \
+        zlib-dev && \
     rm -rf /var/lib/apt/lists/*
 
 # </template>
 # <post>
 
-# Standardize on UID $USER
-RUN usermod -o -u $USER default
+# Standardize on UID $USER (alpine:3.4 does not have the shadow package)
+RUN apk add shadow --no-cache --repository http://rsync.alpinelinux.org/alpine/latest-stable/community/ && \
+    usermod -o -u $USER default && \
+    apk del shadow
 
 # Drop the root user and make the content of /opt/app-root owned by user default
 RUN chown -R $USER:0 /opt/app-root && chmod -R ug+rwx /opt/app-root

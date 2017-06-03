@@ -1,4 +1,14 @@
 #!/bin/bash
+source cgroup-limits
+
+set -e
+set -o pipefail
+# Include hidden files
+shopt -s dotglob
+
+# Set the umask to be '002' so that any files/directories created from
+# this point are group writable.
+umask 002
 
 function rake_assets_precompile() {
   [[ "$DISABLE_ASSET_COMPILATION" == "true" ]] && return
@@ -12,9 +22,9 @@ function rake_assets_precompile() {
   bundle exec rake assets:precompile
 }
 
-export RACK_ENV=${RACK_ENV:-"production"}
-
 function is_puma_installed() {
   [ ! -f Gemfile.lock ] && return 1
   grep ' puma ' Gemfile.lock >/dev/null
 }
+
+export RACK_ENV=${RACK_ENV:-"production"}

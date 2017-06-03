@@ -4,11 +4,24 @@
 * DO NOT EDIT IT DIRECTLY.
 */
 node {
-        def versions = "2.1,2.2,2.3,2.4".split(',');
-        for (int i = 0; i < versions.length; i++) {
-                try {
-                        stage("Build (Ruby ${versions[i]})") {
-                                openshift.withCluster() {
+        def variants = "default,alpine".split(',');
+        for (int v = 0; v < variants.length; v++) {
+
+                def versions = "2.1,2.2,2.3,2.4".split(',');
+                for (int i = 0; i < versions.length; i++) {
+
+                  if (variants[v] == "default") {
+                    variant = ""
+                    tag = versions[i]
+                  } else {
+                    variant = variants[v]
+                    tag = versions[i] + "-" + variant
+                  }
+
+
+                        try {
+                                stage("Build (Ruby-${tag})") {
+                                        openshift.withCluster() {
         openshift.apply([
                                 "apiVersion" : "v1",
                                 "items" : [
@@ -24,10 +37,10 @@ node {
                                                 "spec" : [
                                                         "tags" : [
                                                                 [
-                                                                        "name" : "${versions[i]}-alpine",
+                                                                        "name" : "${tag}",
                                                                         "from" : [
                                                                                 "kind" : "DockerImage",
-                                                                                "name" : "ruby:${versions[i]}-alpine",
+                                                                                "name" : "ruby:${tag}",
                                                                         ],
                                                                         "referencePolicy" : [
                                                                                 "type" : "Source"
@@ -53,7 +66,7 @@ node {
                                 "apiVersion" : "v1",
                                 "kind" : "BuildConfig",
                                 "metadata" : [
-                                        "name" : "s2i-ruby-${versions[i]}",
+                                        "name" : "s2i-ruby-${tag}",
                                         "labels" : [
                                                 "builder" : "s2i-ruby"
                                         ]
@@ -62,7 +75,7 @@ node {
                                         "output" : [
                                                 "to" : [
                                                         "kind" : "ImageStreamTag",
-                                                        "name" : "s2i-ruby:${versions[i]}"
+                                                        "name" : "s2i-ruby:${tag}"
                                                 ]
                                         ],
                                         "runPolicy" : "Serial",
@@ -79,27 +92,27 @@ node {
                                         ],
                                         "strategy" : [
                                                 "dockerStrategy" : [
-                                                        "dockerfilePath" : "versions/${versions[i]}/Dockerfile",
+                                                        "dockerfilePath" : "versions/${versions[i]}/${variant}/Dockerfile",
                                                         "from" : [
                                                                 "kind" : "ImageStreamTag",
-                                                                "name" : "ruby:${versions[i]}-alpine"
+                                                                "name" : "ruby:${tag}"
                                                         ]
                                                 ],
                                                 "type" : "Docker"
                                         ]
                                 ]
                         ])
-        echo "Created s2i-ruby:${versions[i]} objects"
+        echo "Created s2i-ruby:${tag} objects"
         /**
         * TODO: Replace the sleep with import-image
-        * openshift.importImage("ruby:${versions[i]}-alpine")
+        * openshift.importImage("ruby:${tag}")
         */
         sleep 60
 
         echo "==============================="
-        echo "Starting build s2i-ruby-${versions[i]}"
+        echo "Starting build s2i-ruby-${tag}"
         echo "==============================="
-        def builds = openshift.startBuild("s2i-ruby-${versions[i]}");
+        def builds = openshift.startBuild("s2i-ruby-${tag}");
 
         timeout(10) {
                 builds.untilEach(1) {
@@ -109,14 +122,14 @@ node {
         echo "Finished build ${builds.names()}"
 }
 
-                        }
-                        stage("Test (Ruby ${versions[i]})") {
-                                openshift.withCluster() {
+                                }
+                                stage("Test (Ruby-${tag})") {
+                                        openshift.withCluster() {
         echo "==============================="
         echo "Starting test application"
         echo "==============================="
 
-        def testApp = openshift.newApp("https://github.com/ausnimbus/ruby-ex", "--image-stream=s2i-ruby:${versions[i]}", "-l app=ruby-ex");
+        def testApp = openshift.newApp("https://github.com/ausnimbus/ruby-ex", "--image-stream=s2i-ruby:${tag}", "-l app=ruby-ex");
         echo "new-app created ${testApp.count()} objects named: ${testApp.names()}"
         testApp.describe()
 
@@ -148,28 +161,29 @@ node {
         sh "curl -o /dev/null $testAppHost:$testAppPort"
 }
 
-                        }
-                        stage("Stage (Ruby ${versions[i]})") {
-                                openshift.withCluster() {
+                                }
+                                stage("Stage (Ruby-${tag})") {
+                                        openshift.withCluster() {
         echo "==============================="
         echo "Tag new image into staging"
         echo "==============================="
 
-        openshift.tag("ausnimbus-ci/s2i-ruby:${versions[i]}", "ausnimbus/s2i-ruby:${versions[i]}")
+        openshift.tag("ausnimbus-ci/s2i-ruby:${tag}", "ausnimbus/s2i-ruby:${tag}")
 }
 
+                                }
+                        } finally {
+                                openshift.withCluster() {
+                                        echo "Deleting test resources ruby-ex"
+                                        openshift.selector("dc", [app: "ruby-ex"]).delete()
+                                        openshift.selector("bc", [app: "ruby-ex"]).delete()
+                                        openshift.selector("svc", [app: "ruby-ex"]).delete()
+                                        openshift.selector("is", [app: "ruby-ex"]).delete()
+                                        openshift.selector("pods", [app: "ruby-ex"]).delete()
+                                        openshift.selector("routes", [app: "ruby-ex"]).delete()
+                                }
                         }
-                } finally {
-                        openshift.withCluster() {
-                                echo "Deleting test resources ruby-ex"
-                                openshift.selector("dc", [app: "ruby-ex"]).delete()
-                                openshift.selector("bc", [app: "ruby-ex"]).delete()
-                                openshift.selector("svc", [app: "ruby-ex"]).delete()
-                                openshift.selector("is", [app: "ruby-ex"]).delete()
-                                openshift.selector("pods", [app: "ruby-ex"]).delete()
-                                openshift.selector("routes", [app: "ruby-ex"]).delete()
-                        }
-                }
 
+                }
         }
 }

@@ -1,7 +1,11 @@
 #!/bin/bash -e
 source /opt/app-root/etc/ruby_environment
 
-shopt -s dotglob
+if [ -d /tmp/artifacts/ ]; then
+    echo "---> Restoring build artifacts..."
+    mv -v /tmp/artifacts/* ./
+fi
+
 echo "---> Installing application source ..."
 mv /tmp/src/* ./
 

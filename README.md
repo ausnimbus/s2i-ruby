@@ -7,10 +7,6 @@ This repository contains the source for the [source-to-image](https://github.com
 builders used to deploy [Ruby applications](https://www.ausnimbus.com.au/languages/ruby/)
 on [AusNimbus](https://www.ausnimbus.com.au/).
 
-The builders are built using Ruby binaries from ruby-lang.org
-
-If you are interested in using SCL-based Ruby binaries, use [s2i-ruby-scl](https://github.com/ausnimbus/s2i-ruby-scl)
-
 ## Environment variables
 
 To set these environment variables, you can place them as a key value pair into a `.sti/environment`
@@ -111,11 +107,9 @@ The versions currently supported are:
 - 2.3
 - 2.4
 
-## Hacking
+## Variants
 
-`hack/run build` will build and test all images
-`hack/run update` will update all Dockerfiles
+Two different variants are made available:
 
-`docker-squash` is used to to squash the final image:
-
-`pip install docker-squash`
+- Default
+- Alpine
