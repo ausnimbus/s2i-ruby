@@ -1,16 +1,18 @@
-# AusNimbus Builder for Ruby
+# AusNimbus Builder for Ruby  [![Build Status](https://travis-ci.org/ausnimbus/s2i-ruby.svg?branch=master)](https://travis-ci.org/ausnimbus/s2i-ruby) [![Docker Repository on Quay](https://quay.io/repository/ausnimbus/s2i-ruby/status "Docker Repository on Quay")](https://quay.io/repository/ausnimbus/s2i-ruby)
 
-[![Build Status](https://travis-ci.org/ausnimbus/s2i-ruby.svg?branch=master)](https://travis-ci.org/ausnimbus/s2i-ruby)
-[![Docker Repository on Quay](https://quay.io/repository/ausnimbus/s2i-ruby/status "Docker Repository on Quay")](https://quay.io/repository/ausnimbus/s2i-ruby)
+[![Ruby](https://user-images.githubusercontent.com/2239920/27285112-e0843ae8-553e-11e7-8f85-48a7ef36e002.jpg)](https://www.ausnimbus.com.au/)
 
-[AusNimbus](https://www.ausnimbus.com.au/) builder for Ruby provides a fast, secure and reliable [Ruby hosting](https://www.ausnimbus.com.au/languages/ruby-hosting/) environment.
+The [AusNimbus](https://www.ausnimbus.com.au/) builder for Ruby applications provides a fast, secure and reliable Rack, Rails and [Ruby hosting](https://www.ausnimbus.com.au/languages/ruby-hosting/) environment.
+
+It uses bundler for dependency management. The recommended webserver is Puma. Web processes must bind to port `8080`,
+and only the HTTP protocol is permitted for incoming connections.
 
 ## Environment variables
 
 * **RACK_ENV**
 
-    This variable specifies the environment where the Ruby application will be deployed (unless overwritten) - `production`, `development`, `test`.
-    Each level has different behaviors in terms of logging verbosity, error pages, ruby gem installation, etc.
+    This variable specifies the environment where the Ruby application will be deployed - `production`, `development`, `test`.
+    Each level has different behaviours in terms of logging verbosity, error pages, ruby gem installation, etc.
 
     **Note**: Application assets will be compiled only if the `RACK_ENV` is set to `production`
 
@@ -37,7 +39,7 @@ In order to dynamically pick up changes made in your application source code, yo
 
 *  **For Ruby on Rails applications**
 
-    Run the built Rails image with the `RAILS_ENV=development` environment variable
+    Run the built Rails application with the `RAILS_ENV=development` environment variable
 
 *  **For other types of Ruby applications (Sinatra, Padrino, etc.)**
 
@@ -47,29 +49,6 @@ In order to dynamically pick up changes made in your application source code, yo
     * [Rack-livereload](https://github.com/johnbintz/rack-livereload)
 
 
-## Performance tuning
-
-You can tune the number of threads per worker using the
-`PUMA_MIN_THREADS` and `PUMA_MAX_THREADS` environment variables.
-
-Additionally, the number of worker processes is determined by the number of CPU
-cores that the container has available, as recommended by
-[Puma](https://github.com/puma/puma)'s documentation. This is dynamically
-configured for you.
-
-The number of workers is also limited by the memory limit. The builder assumes
-that you will need 50 MiB as a base and another 15 MiB for every worker
-process plus 128 KiB for each thread. Note that each worker has its own threads, 
-so the total memory required for the whole container is computed using the following formula:
-
-```
-50 + 15 * WORKERS + 0.125 * WORKERS * PUMA_MAX_THREADS
-```
-
-If memory is more limiting then the number of available cores, the number of
-workers is scaled down accordingly to fit the above formula. The number of
-workers can also be set explicitly by setting `PUMA_WORKERS`.
-
 ## Versions
 
 The versions currently supported are:
@@ -78,10 +57,3 @@ The versions currently supported are:
 - 2.2
 - 2.3
 - 2.4
-
-## Variants
-
-Two different variants are made available:
-
-- Default
-- Alpine
