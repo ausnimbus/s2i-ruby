@@ -2,7 +2,7 @@
 
 [![Ruby](https://user-images.githubusercontent.com/2239920/27285112-e0843ae8-553e-11e7-8f85-48a7ef36e002.jpg)](https://www.ausnimbus.com.au/)
 
-The [AusNimbus](https://www.ausnimbus.com.au/) builder for Ruby applications provides a fast, secure and reliable Rack, Rails and [Ruby hosting](https://www.ausnimbus.com.au/languages/ruby-hosting/) environment.
+The [AusNimbus](https://www.ausnimbus.com.au/) builder for Ruby applications provides a fast, secure and reliable Rack, [Rails](https://www.ausnimbus.com.au/apps/rails-hosting/) and [Ruby hosting](https://www.ausnimbus.com.au/languages/ruby-hosting/) environment.
 
 It uses bundler for dependency management. The recommended webserver is Puma. Web processes must bind to port `8080`,
 and only the HTTP protocol is permitted for incoming connections.
