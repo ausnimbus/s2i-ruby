@@ -9,6 +9,12 @@ and only the HTTP protocol is permitted for incoming connections.
 
 ## Environment variables
 
+* **APP_RUN**
+
+    Define the application command to be run. This can be a command to start the application.
+
+    **NOTE:** This overwrites any builder dynamic run configuration.
+
 * **RACK_ENV**
 
     This variable specifies the environment where the Ruby application will be deployed - `production`, `development`, `test`.

@@ -1,7 +1,12 @@
 #!/bin/bash -e
 source /opt/app-root/etc/ruby_environment
 
-if is_puma_installed; then
+# APP_RUN defined (eg. rack --host 0.0.0.0 --port 8080)
+if [[ -n "$APP_RUN" ]]; then
+  echo "---> Running application from ($APP_RUN) ..."
+  eval bash -c "$APP_RUN"
+
+elif is_puma_installed; then
   source /opt/app-root/etc/vendor/puma_environment
 
   exec bundle exec "puma --config ${PUMA_CONFIG}"
