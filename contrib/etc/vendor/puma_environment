@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# dynamically configure workers
+if [ $MEMORY_LIMIT -gt 4096 ]; then
+  export WEB_CONCURRENCY=${WEB_CONCURRENCY:-16}
+elif [ $MEMORY_LIMIT -gt 2048 ]; then
+  export WEB_CONCURRENCY=${WEB_CONCURRENCY:-8}
+elif [ $MEMORY_LIMIT -gt 1024 ]; then
+  export WEB_CONCURRENCY=${WEB_CONCURRENCY:-4}
+else
+  export WEB_CONCURRENCY=${WEB_CONCURRENCY:-2}
+fi
+
+# Define the puma.rb config locations
+if [ -n $PUMA_CONFIG ]; then
+  export PUMA_CONFIG=$PUMA_CONFIG
+elif [ -f ./config/puma.rb ]; then
+  export PUMA_CONFIG="./config/puma.rb"
+else
+  export PUMA_CONFIG=${PUMA_CONFIG:-"../etc/vendor/puma.rb"}
+fi

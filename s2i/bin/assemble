@@ -1,7 +1,7 @@
 #!/bin/bash -e
 source /opt/app-root/etc/ruby_environment
 
-if [ -d /tmp/artifacts/ ]; then
+if ls -U /tmp/artifacts/* 1> /dev/null 2>&1; then
     echo "---> Restoring build artifacts..."
     mv -v /tmp/artifacts/* ./
 fi
@@ -39,23 +39,9 @@ if [ -f Gemfile ]; then
   bundle clean -V
 fi
 
-if ! bundle exec rackup -h &>/dev/null; then
-  echo "WARNING: Rubygem Rack is not installed in the present image."
-  echo "         Add rack to your Gemfile in order to start the web server."
-fi
-
 if [[ "$RAILS_ENV" == "production" || "$RACK_ENV" == "production" ]]; then
   rake_assets_precompile
 fi
 
 # Fix source directory permissions
-fix-permissions ./
-
-# Make the ./tmp folder world writeable as Rails or other frameworks might use
-# it to store temporary data (uploads/cache/sessions/etcd).
-# The ./db folder has to be writeable as well because when Rails complete the
-# migration it writes the schema version into ./db/schema.db
-set +e
-[[ -d ./tmp ]] && chgrp -R 0 ./tmp && chmod -R g+rw ./tmp
-[[ -d ./db ]] && chgrp -R 0 ./db && chmod -R g+rw ./db
-set -e
+fix-permissions /opt/app-root/src

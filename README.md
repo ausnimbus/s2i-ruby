@@ -12,28 +12,27 @@ and only the HTTP protocol is permitted for incoming connections.
 * **RACK_ENV**
 
     This variable specifies the environment where the Ruby application will be deployed - `production`, `development`, `test`.
-    Each level has different behaviours in terms of logging verbosity, error pages, ruby gem installation, etc.
-
-    **Note**: Application assets will be compiled only if the `RACK_ENV` is set to `production`
 
 * **DISABLE_ASSET_COMPILATION**
 
-    This variable set to `true` indicates that the asset compilation process will be skipped. Since this only takes place
-    when the application is run in the `production` environment, it should only be used when assets are already compiled.
-
-* **PUMA_MIN_THREADS**, **PUMA_MAX_THREADS**
-
-    These variables indicate the minimum and maximum threads that will be available in [Puma](https://github.com/puma/puma)'s thread pool.
-
-* **PUMA_WORKERS**
-
-    This variable indicate the number of worker processes that will be launched. See documentation on Puma's [clustered mode](https://github.com/puma/puma#clustered-mode).
+    Set this variable to `TRUE` will skip the asset compilation process. By default asset complication only occurs when the application is run in the `production` environment.
 
 * **RUBYGEM_MIRROR**
 
     Set this variable to use a custom RubyGems mirror URL to download required gem packages during build process.
 
-## Hot deploy
+If you are using Puma, you may use the following environment variables.
+
+* **PUMA_CONFIG**
+
+    Path to your `puma.rb` config file. By default it will try to use `./config/puma.rb` or fall back to the provided config file.
+
+* **WEB_CONCURRENCY**
+
+    Set this to change the default setting for the number of
+    workers. By default, this is auto configured based on the `MEMORY_LIMIT`
+
+## Debug Mode
 
 In order to dynamically pick up changes made in your application source code, you need to make following steps:
 
@@ -44,10 +43,10 @@ In order to dynamically pick up changes made in your application source code, yo
 *  **For other types of Ruby applications (Sinatra, Padrino, etc.)**
 
     Your application needs to be built with one of gems that reloads the server every time changes in source code are done inside the running container. Some examples are:
+
     * [Shotgun](https://github.com/rtomayko/shotgun)
     * [Rerun](https://github.com/alexch/rerun)
     * [Rack-livereload](https://github.com/johnbintz/rack-livereload)
-
 
 ## Versions
 

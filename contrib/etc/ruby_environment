@@ -3,6 +3,7 @@ source cgroup-limits
 
 set -e
 set -o pipefail
+
 # Include hidden files
 shopt -s dotglob
 
@@ -11,7 +12,7 @@ shopt -s dotglob
 umask 002
 
 function rake_assets_precompile() {
-  [[ "$DISABLE_ASSET_COMPILATION" == "true" ]] && return
+  [[ "$DISABLE_ASSET_COMPILATION" == "TRUE" ]] && return
   [ ! -f Gemfile ] && return
   [ ! -f Rakefile ] && return
   ! grep " rails " Gemfile.lock >/dev/null && return
@@ -28,3 +29,10 @@ function is_puma_installed() {
 }
 
 export RACK_ENV=${RACK_ENV:-"production"}
+export RAILS_ENV=${RAILS_ENV:-"production"}
+
+# Overwrite ENV when DEBUG==TRUE
+if [ "$DEBUG" == "TRUE" ]; then
+  RACK_ENV="development"
+  RAILS_ENV="development"
+fi
