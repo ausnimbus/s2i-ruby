@@ -6,6 +6,24 @@ The [AusNimbus](https://www.ausnimbus.com.au/) builder for Ruby applications pro
 
 This document describes the behaviour and environment configuration when running your Ruby apps on AusNimbus.
 
+- [Runtime Environments](#runtime-environments)
+- [Web Process](#web-process)
+- [Dependency Management](#dependency-management)
+- [Environment Configuration](#environment-configuration)
+- [Advanced](#advanced)
+  - [Build Customization](#build-customization)
+    - [Asset Compilation](#asset-compilation)
+    - [Configuring bundler](#configuring-bundler)
+  - [Using Puma](#using-puma)
+    - [Configuring Puma](#configuring-puma)
+    - [Application Concurrency](#application-concurrency)
+- [Extending](#extending)
+  - [Build Stage (assemble)](#build-stage-assemble)
+  - [Runtime Stage (run)](#runtime-stage-run)
+  - [Persistent Environment Variables](#persistent-environment-variables)
+- [Debug Mode](#debug-mode)
+- [Troubleshooting](#troubleshooting)
+
 ## Runtime Environments
 
 AusNimbus supports various Ruby versions.
