@@ -6,6 +6,8 @@ The [AusNimbus](https://www.ausnimbus.com.au/) builder for Ruby applications pro
 
 This document describes the behaviour and environment configuration when running your Ruby apps on AusNimbus.
 
+## Table of Contents
+
 - [Runtime Environments](#runtime-environments)
 - [Web Process](#web-process)
 - [Dependency Management](#dependency-management)
